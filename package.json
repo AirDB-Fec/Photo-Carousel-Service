@@ -14,13 +14,14 @@
     "start:dev": "nodemon server/index.js",
     "start": "node generate.js && node server/",
     "test": "jest",
-    "docker:update": "./update.sh" ,
+    "docker:update": "./update.sh",
     "docker:deploy": "docker tag airfec_photos airfec/airfec_photos:latest && docker push airfec/airfec_photos"
   },
   "dependencies": {
     "babel-jest": "^23.4.0",
     "body-parser": "^1.18.3",
     "classnames": "^2.2.6",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "faker": "^4.1.0",
     "mongoose": "^5.2.4",
