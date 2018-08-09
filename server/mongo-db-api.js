@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/photo_carousel');
 
 const db = mongoose.connection;
 
@@ -16,32 +16,32 @@ const schema = new mongoose.Schema ({
   description: 'String',
 });
 
-const photosDb = mongoose.model('photos_db', schema);
+const photosModel = mongoose.model('photos_model', schema);
 
-const getPhoto = function getPhotoByName(name, cb) {
-  photosDb.find({room_name: name}, (err, doc) => {
+const getPhotos = function getPhotosByRoomName(name, cb) {
+  photosModel.find({ room_name: name }, (err, docs) => {
     if (err) throw err;
-    cb(doc);
+    cb(docs);
   })
 }
 
-const postPhoto = function postPhotoUrlPathname(photoObject, cb) {
-  photosDb.create(photoObject, (err, doc) => {
+const postPhoto = function postNewPhotoInformation(photoObject, cb) {
+  photosModel.insertMany(photoObject, (err, docs) => {
     if (err) throw err;
-    cb(doc);
+    cb(docs);
   })
 }
 
 const putPhoto = function modifyPhotoInformation(conditions, update, cb) {
-  photosDb.findOneAndUpdate(conditions, update, (err, doc) => {
+  photosModel.findOneAndUpdate(conditions, update, (err, doc) => {
     cb(doc);
   })
 }
 
-const deletePhoto = function deletePhoto(name, cb) {
-  photosDb.findOneAndDelete(name, (err, doc) => {
+const deletePhoto = function deletePhoto(conditions, cb) {
+  photosModel.findOneAndDelete(conditions, (err, doc) => {
     cb(doc);
   })
 }
 
-exports.modules = { getPhoto, postPhoto, putPhoto, deletePhoto };
+module.exports = { getPhoto, postPhoto, putPhoto, deletePhoto };
