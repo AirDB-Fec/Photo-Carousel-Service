@@ -14,12 +14,13 @@ app.get('/', function(req, res) {
   res.redirect('/rooms/1');
 });
 
+app.post('/api/rooms', (req, res) => {
+    res.send('this is a post request');
+  });
+
 app.route('/api/rooms/:id')
   .get((req, res) => {
-    res.send('this is a get request');
-  })
-  .post((req, res) => {
-    res.send('this is a post request');
+    res.send('this is a get request for item, ' + req.params.id);
   })
   .put((req, res) => {
     res.send('this is a put request');
@@ -30,11 +31,6 @@ app.route('/api/rooms/:id')
 
 app.use(express.static('public'));
 app.use(express.static('client/dist'));
-
-app.get('/rooms/:id', function(req, res) {
-  // const reactPath = path.join(__dirname, '../public/index.html');
-  res.send('this is a get request for item' + req.params.id);
-});
 
 app.listen(app.get('port'), () =>
   console.log(`listening on port ${app.get('port')}!`)
