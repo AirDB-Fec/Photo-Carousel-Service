@@ -26,3 +26,9 @@ coverage
 build/
 dist/
 
+# Large Files
+*.gz
+*.csv
+
+# Photos
+assets/
