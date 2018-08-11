@@ -59,7 +59,6 @@ Schema: {
 }
 */
 
-
 const tsv = function cassandraPrimaryRecordsTsvGenerator() {
   let id = 1;
   let photoId = 0;
