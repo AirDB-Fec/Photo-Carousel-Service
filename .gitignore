@@ -32,3 +32,6 @@ dist/
 
 # Photos
 assets/
+
+# New Relic
+newrelic.js
