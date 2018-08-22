@@ -2,6 +2,7 @@ require('newrelic');
 const express = require('express');
 const cors = require('cors');
 const cluster = require('cluster');
+const path = require('path');
 const numCPUs = require('os').cpus().length;
 const dbRouter = require('./dbRouter.js');
 // Removed Body-Parser
@@ -31,13 +32,15 @@ if (cluster.isMaster) {
     res.send('this is a post request');
   });
 
-  app.route('/api/rooms/:id')
+  app.route('/api/rooms/:id/*')
     .get(dbRouter.get)
     .put(dbRouter.put)
     .delete(dbRouter.delete);
 
-  app.use(express.static('public'));
-  app.use(express.static('client/dist'));
+  app.get('*/bundle.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/bundle.js'));
+  });
+  app.use('/*', express.static('public'));
 
   app.listen(app.get('port'), () => {
     console.log(`listening on port ${app.get('port')}`);
