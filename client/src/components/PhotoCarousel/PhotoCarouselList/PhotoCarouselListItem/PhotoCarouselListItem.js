@@ -10,7 +10,7 @@ const PhotoCarouselListItem = props => {
       className="carousel-list-item action-link"
       onClick={handleCarouselClick}
     >
-      <img src={props.photo.photo_url} alt="pic" />
+      <img src={'https://s3-us-west-1.amazonaws.com/airdb-sdc/' + props.photo.photo_url} alt="pic" />
     </li>
   );
 };

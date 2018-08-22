@@ -20,7 +20,7 @@ const PhotoDisplay = props => {
   return (
     <div className="photo-gallery-display" onClick={handleClickForDisplay}>
       <div className="image-wrapper">
-        <img src={props.photo.photo_url} alt="main photo" />
+        <img src={'https://s3-us-west-1.amazonaws.com/airdb-sdc/' + props.photo.photo_url} alt="main photo" />
       </div>
 
       <div className="gallery-display fx">
