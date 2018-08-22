@@ -1,37 +1,48 @@
+require('newrelic');
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
 const cors = require('cors');
+const cluster = require('cluster');
+const path = require('path');
+const numCPUs = require('os').cpus().length;
+const dbRouter = require('./dbRouter.js');
+// Removed Body-Parser
 
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
 
 app.set('port', process.env.PORT || 3004);
 
-app.get('/', function(req, res) {
-  res.redirect('/rooms/1');
-});
+if (cluster.isMaster) {
+  console.log(`Master ${process.pid} is running`);
 
-app.post('/api/rooms', (req, res) => {
+  for (let i = 0; i < numCPUs; i += 1) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.redirect('/rooms/1');
+  });
+
+  app.post('/api/rooms', (req, res) => {
     res.send('this is a post request');
   });
 
-app.route('/api/rooms/:id')
-  .get((req, res) => {
-    res.send('this is a get request for item, ' + req.params.id);
-  })
-  .put((req, res) => {
-    res.send('this is a put request');
-  })
-  .delete((req, res) => {
-    res.send('this is a delete request');
+  app.route('/api/rooms/:id/*')
+    .get(dbRouter.get)
+    .put(dbRouter.put)
+    .delete(dbRouter.delete);
+
+  app.get('*/bundle.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/bundle.js'));
   });
+  app.use('/*', express.static('public'));
 
-app.use(express.static('public'));
-app.use(express.static('client/dist'));
-
-app.listen(app.get('port'), () =>
-  console.log(`listening on port ${app.get('port')}!`)
-);
+  app.listen(app.get('port'), () => {
+    console.log(`listening on port ${app.get('port')}`);
+  });
+}

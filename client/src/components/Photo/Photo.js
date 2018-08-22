@@ -22,10 +22,10 @@ class Photo extends Component {
       .then(res => {
         return res.json();
       })
-      .then(({ results: photos }) => {
+      .then((res) => {
         this.setState({
-          photos: photos,
-          photo: photos[0]
+          photos: res,
+          photo: res[0],
         });
       })
       .catch(err => {
